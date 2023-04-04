@@ -43,6 +43,12 @@ functions:
       - httpApi:
           method: GET
           path: /allblogs
+  delete:
+    handler: handlers/delete.deleteBlogById
+    events:
+      - httpApi: 
+         method: DELETE
+         path: /delete
         
 
 
