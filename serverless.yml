@@ -1,0 +1,73 @@
+
+
+service: dynamodb
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: dev
+
+custom:
+  dynamodb:
+        stages:
+            - dev
+        start:
+            port: 8000
+            migrate: true
+
+ 
+
+
+
+
+functions:
+  createblog:
+    handler: handlers/createblog.createBlog
+    events:
+      - httpApi:
+         method: POST
+         path:  /createpost
+
+  getblog:
+    handler: handlers/getblog.getBlog
+    events:
+      - httpApi:
+         method: GET
+         path:  /getpost
+
+  allblogs:
+    handler: handlers/allblogs.getAllBlog
+    events:
+      - httpApi:
+          method: GET
+          path: /allblogs
+        
+
+
+resources: 
+ Resources:
+  BlogsTable:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      TableName: "BlogsTable"
+      AttributeDefinitions:
+        - AttributeName: "id"
+          AttributeType: "N"
+      KeySchema:
+        - AttributeName: "id"
+          KeyType: "HASH"
+      
+      ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+      
+
+
+
+plugins:
+ - serverless-offline
+ - serverless-dynamodb-local
+
